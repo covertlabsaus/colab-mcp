@@ -35,21 +35,13 @@ When you switch tools, your AI already knows what you were working on. No more c
 ## 🏗️ How It Works
 
 ```mermaid
-graph TD
-    A[Claude Desktop] --> E[Colab MCP Server]
-    B[Cursor] --> E
-    C[Codex CLI] --> E
-    D[Gemini] --> E
+graph LR
+    A[AI Tools] --> B[Colab MCP]
+    B --> C[Your Logs]
     
-    E --> F[Chat Logs<br/>~/.claude/]
-    E --> G[IDE Logs<br/>~/.cursor-server/]
-    E --> H[Terminal History<br/>~/.codex/]
-    
-    style E fill:#f9a825,stroke:#f57f17,stroke-width:3px
-    style A fill:#7c4dff,stroke:#651fff
-    style B fill:#448aff,stroke:#2979ff
-    style C fill:#00e676,stroke:#00c853
-    style D fill:#ff6e40,stroke:#ff3d00
+    style B fill:#e8f4f8,stroke:#4a90a4,stroke-width:2px
+    style A fill:#f5f5f5,stroke:#888,stroke-width:1px
+    style C fill:#f5f5f5,stroke:#888,stroke-width:1px
 ```
 
 ### Installation Flow
@@ -58,42 +50,28 @@ graph TD
 sequenceDiagram
     participant User
     participant Installer
-    participant System
-    participant AITool as AI Tools
+    participant Tools as AI Tools
 
-    User->>Installer: sudo ./install.py
-    Installer->>System: Detect installed AI tools
-    System-->>Installer: Found: Claude, Cursor, Codex
-    Installer->>User: Show selection menu
-    User->>Installer: Select tools to configure
-    Installer->>AITool: Write MCP config files
-    Installer->>User: ✓ Configuration complete
-    User->>AITool: Restart tools
-    AITool->>AITool: Load Colab MCP server
+    User->>Installer: Run installer
+    Installer->>Tools: Detect & configure
+    Tools-->>User: Ready to use
 ```
 
-### Context Sharing Workflow
+### Context Sharing Example
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant C as Claude Desktop
-    participant MCP as Colab MCP
-    participant Logs as Log Files
-    participant Cur as Cursor
+    participant User
+    participant Claude
+    participant MCP
+    participant Cursor
 
-    U->>C: "Design auth feature"
-    C->>C: Work on architecture
-    Note over U,C: Session saved to logs
-    
-    U->>Cur: Switch to Cursor for coding
-    U->>Cur: "What did I discuss with Claude?"
-    Cur->>MCP: list_sessions()
-    MCP->>Logs: Read Claude logs
-    Logs-->>MCP: Session data
-    MCP-->>Cur: Previous conversation
-    Cur-->>U: "You discussed JWT tokens..."
-    Note over U,Cur: Context preserved!
+    User->>Claude: Work on feature
+    Note over Claude: Session logged
+    User->>Cursor: Continue work
+    Cursor->>MCP: Get previous context
+    MCP-->>Cursor: Return session
+    Cursor-->>User: Context restored ✓
 ```
 
 ---
@@ -213,37 +191,31 @@ env = { CLAUDE_HOME = "/home/yourusername/.claude", CURSOR_LOGS = "/home/youruse
 
 ```mermaid
 graph TB
-    subgraph "AI Coding Assistants"
+    subgraph AI["AI Tools"]
         Claude[Claude Desktop]
-        Cursor[Cursor IDE]
-        Codex[Codex CLI]
-        Gemini[Gemini]
+        Cursor[Cursor]
+        Codex[Codex]
     end
     
-    subgraph "MCP Layer"
-        MCP[Colab MCP Server<br/>stdio mode]
+    MCP[Colab MCP Server]
+    
+    subgraph Logs["Log Files"]
+        Chat[Chat History]
+        IDE[IDE Events]
+        Term[Terminal]
     end
     
-    subgraph "Data Sources"
-        ChatLogs[Chat Logs<br/>~/.claude/]
-        IDELogs[IDE Events<br/>~/.cursor-server/]
-        Terminal[Terminal History<br/>~/.codex/]
-    end
+    Claude --> MCP
+    Cursor --> MCP
+    Codex --> MCP
     
-    Claude -->|MCP Protocol| MCP
-    Cursor -->|MCP Protocol| MCP
-    Codex -->|MCP Protocol| MCP
-    Gemini -->|MCP Protocol| MCP
+    MCP --> Chat
+    MCP --> IDE
+    MCP --> Term
     
-    MCP -->|Read| ChatLogs
-    MCP -->|Read| IDELogs
-    MCP -->|Read| Terminal
-    
-    style MCP fill:#f9a825,stroke:#f57f17,stroke-width:3px
-    style Claude fill:#7c4dff,stroke:#651fff
-    style Cursor fill:#448aff,stroke:#2979ff
-    style Codex fill:#00e676,stroke:#00c853
-    style Gemini fill:#ff6e40,stroke:#ff3d00
+    style MCP fill:#e8f4f8,stroke:#4a90a4,stroke-width:2px
+    style AI fill:#f9f9f9,stroke:#ccc
+    style Logs fill:#f9f9f9,stroke:#ccc
 ```
 
 ---

@@ -8,37 +8,33 @@ Colab MCP is a **FastMCP server** that runs locally on your machine and exposes 
 
 ```mermaid
 graph TB
-    subgraph "AI Coding Assistants"
+    subgraph AI["AI Tools"]
         Claude[Claude Desktop]
-        Cursor[Cursor IDE]
-        Codex[Codex CLI]
-        Others[Other Tools...]
+        Cursor[Cursor]
+        Codex[Codex]
+        Others[...]
     end
     
-    subgraph "MCP Layer"
-        MCP[Colab MCP Server<br/>stdio mode<br/>FastMCP]
+    MCP[Colab MCP Server<br/>FastMCP / stdio]
+    
+    subgraph Data["Log Storage"]
+        ChatLogs[Chat Logs]
+        IDELogs[IDE Events]
+        Terminal[Terminal History]
     end
     
-    subgraph "Data Sources"
-        ChatLogs[Chat Logs<br/>~/.claude/<br/>JSONL format]
-        IDELogs[IDE Events<br/>~/.cursor-server/data/logs/<br/>JSON logs]
-        Terminal[Terminal History<br/>~/.codex/<br/>Session transcripts]
-    end
+    Claude --> MCP
+    Cursor --> MCP
+    Codex --> MCP
+    Others --> MCP
     
-    Claude -->|MCP Protocol<br/>stdio| MCP
-    Cursor -->|MCP Protocol<br/>stdio| MCP
-    Codex -->|MCP Protocol<br/>stdio| MCP
-    Others -->|MCP Protocol<br/>stdio| MCP
+    MCP --> ChatLogs
+    MCP --> IDELogs
+    MCP --> Terminal
     
-    MCP -->|Read & Parse| ChatLogs
-    MCP -->|Read & Parse| IDELogs
-    MCP -->|Read & Parse| Terminal
-    
-    style MCP fill:#f9a825,stroke:#f57f17,stroke-width:3px
-    style Claude fill:#7c4dff,stroke:#651fff
-    style Cursor fill:#448aff,stroke:#2979ff
-    style Codex fill:#00e676,stroke:#00c853
-    style Others fill:#9e9e9e,stroke:#616161
+    style MCP fill:#e8f4f8,stroke:#4a90a4,stroke-width:2px
+    style AI fill:#f9f9f9,stroke:#ccc
+    style Data fill:#f9f9f9,stroke:#ccc
 ```
 
 ## Components
@@ -137,24 +133,21 @@ Here's what happens:
 sequenceDiagram
     participant User
     participant Claude
-    participant MCP as Colab MCP
-    participant Logs as Cursor Logs
+    participant MCP
+    participant Logs
 
-    User->>Claude: "What was I working on<br/>in my last Cursor session?"
-    Claude->>MCP: list_sessions(limit=1)
-    MCP->>Logs: Read ~/.cursor-server/data/logs/
-    Logs-->>MCP: Latest session file
-    MCP->>MCP: Parse & extract metadata
-    MCP-->>Claude: {session_id: "xyz789", timestamp: "..."}
-    Claude->>MCP: fetch_transcript(session_id="xyz789")
-    MCP->>Logs: Read full log file
-    Logs-->>MCP: Complete session data
-    MCP->>MCP: Build transcript
-    MCP-->>Claude: Full transcript JSON
-    Claude->>Claude: Summarize in natural language
-    Claude-->>User: "You were working on<br/>the authentication feature..."
+    User->>Claude: Ask about previous work
+    Claude->>MCP: list_sessions()
+    MCP->>Logs: Read log files
+    Logs-->>MCP: Session data
+    MCP-->>Claude: Session info
+    Claude->>MCP: fetch_transcript()
+    MCP->>Logs: Read full session
+    Logs-->>MCP: Complete data
+    MCP-->>Claude: Full transcript
+    Claude-->>User: Summary of previous work
     
-    Note over User,Logs: Total time: ~100ms
+    Note over User,Logs: ~100ms total
 ```
 
 All of this happens in ~100ms. 
