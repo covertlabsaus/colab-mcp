@@ -1,0 +1,14 @@
+# Placeholder for demo GIFs
+
+Add your recorded terminal demos here:
+- install-demo.gif
+- claude-demo.gif
+- context-sharing-demo.gif
+
+You can use tools like:
+- asciinema (https://asciinema.org/)
+- terminalizer (https://terminalizer.com/)
+- vhs (https://github.com/charmbracelet/vhs)
+
+To record terminal sessions and convert them to GIFs.
+

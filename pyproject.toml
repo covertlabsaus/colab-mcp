@@ -1,0 +1,26 @@
+[project]
+name = "colab_mcp"
+version = "0.1.0"
+description = "Colab MCP - Local stdio MCP server to expose Claude/IDE logs as tools/resources"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastmcp>=2.0.0",
+  "pydantic>=2.5.0",
+  "rich>=13.7.0",
+]
+
+[project.scripts]
+colab-mcp = "colab_mcp.main:run"
+colab-mcp-cli = "colab_mcp.cli:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

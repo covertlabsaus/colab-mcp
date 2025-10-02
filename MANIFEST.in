@@ -1,0 +1,17 @@
+# Include documentation
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+
+# Include installer
+include install.py
+
+# Include all markdown files from docs
+recursive-include docs *.md
+recursive-include docs/assets *
+
+# Exclude build artifacts
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
+
