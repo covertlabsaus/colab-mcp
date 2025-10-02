@@ -45,13 +45,7 @@ pip install colab-mcp
 Run the interactive installer:
 
 ```bash
-sudo python -m colab_mcp.install
-```
-
-Or use the standalone installer script:
-
-```bash
-sudo ./install.py
+sudo colab-mcp-install
 ```
 
 The installer will:

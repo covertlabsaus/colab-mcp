@@ -13,6 +13,7 @@ dependencies = [
 [project.scripts]
 colab-mcp = "colab_mcp.main:run"
 colab-mcp-cli = "colab_mcp.cli:main"
+colab-mcp-install = "colab_mcp.installer:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
