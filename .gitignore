@@ -49,6 +49,8 @@ htmlcov/
 .dmypy.json
 dmypy.json
 
+demos/
+
 # pyenv
 .python-version
 

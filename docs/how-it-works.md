@@ -6,33 +6,39 @@ Technical overview for the curious.
 
 Colab MCP is a **FastMCP server** that runs locally on your machine and exposes your AI tool logs through the Model Context Protocol.
 
-```
-┌─────────────────────────────────────────────────┐
-│         AI Coding Assistants                    │
-│                                                 │
-│  ┌──────────┐  ┌────────┐  ┌───────┐          │
-│  │  Claude  │  │ Cursor │  │ Codex │  ...     │
-│  │ Desktop  │  │        │  │       │          │
-│  └────┬─────┘  └───┬────┘  └───┬───┘          │
-│       │            │            │               │
-│       └────────────┴────────────┘               │
-│              MCP Protocol                       │
-└───────────────────┬─────────────────────────────┘
-                    │
-                    ▼
-            ┌───────────────┐
-            │  Colab MCP    │
-            │    Server     │
-            │  (stdio mode) │
-            └───────┬───────┘
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-    ┌────────┐  ┌────────┐  ┌────────┐
-    │ Chat   │  │  IDE   │  │Terminal│
-    │ Logs   │  │ Events │  │History │
-    └────────┘  └────────┘  └────────┘
-    ~/.claude/  ~/.cursor/  ~/.codex/
+```mermaid
+graph TB
+    subgraph "AI Coding Assistants"
+        Claude[Claude Desktop]
+        Cursor[Cursor IDE]
+        Codex[Codex CLI]
+        Others[Other Tools...]
+    end
+    
+    subgraph "MCP Layer"
+        MCP[Colab MCP Server<br/>stdio mode<br/>FastMCP]
+    end
+    
+    subgraph "Data Sources"
+        ChatLogs[Chat Logs<br/>~/.claude/<br/>JSONL format]
+        IDELogs[IDE Events<br/>~/.cursor-server/data/logs/<br/>JSON logs]
+        Terminal[Terminal History<br/>~/.codex/<br/>Session transcripts]
+    end
+    
+    Claude -->|MCP Protocol<br/>stdio| MCP
+    Cursor -->|MCP Protocol<br/>stdio| MCP
+    Codex -->|MCP Protocol<br/>stdio| MCP
+    Others -->|MCP Protocol<br/>stdio| MCP
+    
+    MCP -->|Read & Parse| ChatLogs
+    MCP -->|Read & Parse| IDELogs
+    MCP -->|Read & Parse| Terminal
+    
+    style MCP fill:#f9a825,stroke:#f57f17,stroke-width:3px
+    style Claude fill:#7c4dff,stroke:#651fff
+    style Cursor fill:#448aff,stroke:#2979ff
+    style Codex fill:#00e676,stroke:#00c853
+    style Others fill:#9e9e9e,stroke:#616161
 ```
 
 ## Components
@@ -127,15 +133,29 @@ Let's say you ask Claude Desktop:
 
 Here's what happens:
 
-1. **Claude** sends an MCP tool request: `list_sessions(filter_project=null, limit=1)`
-2. **Colab MCP** reads `~/.cursor-server/data/logs/` 
-3. Finds the most recent session file
-4. Parses it, extracts metadata
-5. Returns session info to Claude
-6. **Claude** then requests: `fetch_transcript(session_id="xyz789")`
-7. **Colab MCP** reads the full log, builds transcript
-8. Returns it to Claude
-9. **Claude** summarizes it for you in natural language
+```mermaid
+sequenceDiagram
+    participant User
+    participant Claude
+    participant MCP as Colab MCP
+    participant Logs as Cursor Logs
+
+    User->>Claude: "What was I working on<br/>in my last Cursor session?"
+    Claude->>MCP: list_sessions(limit=1)
+    MCP->>Logs: Read ~/.cursor-server/data/logs/
+    Logs-->>MCP: Latest session file
+    MCP->>MCP: Parse & extract metadata
+    MCP-->>Claude: {session_id: "xyz789", timestamp: "..."}
+    Claude->>MCP: fetch_transcript(session_id="xyz789")
+    MCP->>Logs: Read full log file
+    Logs-->>MCP: Complete session data
+    MCP->>MCP: Build transcript
+    MCP-->>Claude: Full transcript JSON
+    Claude->>Claude: Summarize in natural language
+    Claude-->>User: "You were working on<br/>the authentication feature..."
+    
+    Note over User,Logs: Total time: ~100ms
+```
 
 All of this happens in ~100ms. 
 

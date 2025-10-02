@@ -32,25 +32,69 @@ When you switch tools, your AI already knows what you were working on. No more c
 
 ---
 
-## 🎬 Demo
+## 🏗️ How It Works
 
-### Installation Wizard
+```mermaid
+graph TD
+    A[Claude Desktop] --> E[Colab MCP Server]
+    B[Cursor] --> E
+    C[Codex CLI] --> E
+    D[Gemini] --> E
+    
+    E --> F[Chat Logs<br/>~/.claude/]
+    E --> G[IDE Logs<br/>~/.cursor-server/]
+    E --> H[Terminal History<br/>~/.codex/]
+    
+    style E fill:#f9a825,stroke:#f57f17,stroke-width:3px
+    style A fill:#7c4dff,stroke:#651fff
+    style B fill:#448aff,stroke:#2979ff
+    style C fill:#00e676,stroke:#00c853
+    style D fill:#ff6e40,stroke:#ff3d00
+```
 
-![Installation Demo](docs/assets/install-demo.gif)
+### Installation Flow
 
-*The interactive installer automatically detects your AI coding tools and sets up Colab MCP for all of them.*
+```mermaid
+sequenceDiagram
+    participant User
+    participant Installer
+    participant System
+    participant AITool as AI Tools
 
-### Using in Claude Desktop
+    User->>Installer: sudo ./install.py
+    Installer->>System: Detect installed AI tools
+    System-->>Installer: Found: Claude, Cursor, Codex
+    Installer->>User: Show selection menu
+    User->>Installer: Select tools to configure
+    Installer->>AITool: Write MCP config files
+    Installer->>User: ✓ Configuration complete
+    User->>AITool: Restart tools
+    AITool->>AITool: Load Colab MCP server
+```
 
-![Claude Desktop Demo](docs/assets/claude-demo.gif)
+### Context Sharing Workflow
 
-*Ask your AI to check previous sessions, search chat history, or reference past work.*
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Claude Desktop
+    participant MCP as Colab MCP
+    participant Logs as Log Files
+    participant Cur as Cursor
 
-### Context Sharing in Action
-
-![Context Sharing Demo](docs/assets/context-sharing-demo.gif)
-
-*Switch from Claude to Cursor - your AI already knows what you were working on.*
+    U->>C: "Design auth feature"
+    C->>C: Work on architecture
+    Note over U,C: Session saved to logs
+    
+    U->>Cur: Switch to Cursor for coding
+    U->>Cur: "What did I discuss with Claude?"
+    Cur->>MCP: list_sessions()
+    MCP->>Logs: Read Claude logs
+    Logs-->>MCP: Session data
+    MCP-->>Cur: Previous conversation
+    Cur-->>U: "You discussed JWT tokens..."
+    Note over U,Cur: Context preserved!
+```
 
 ---
 
@@ -167,23 +211,39 @@ env = { CLAUDE_HOME = "/home/yourusername/.claude", CURSOR_LOGS = "/home/youruse
 
 ## 🗂️ Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│         AI Coding Assistants                    │
-│  Claude Desktop │ Cursor │ Codex │ Gemini      │
-└────────────────┬────────────────────────────────┘
-                 │ MCP Protocol
-                 ▼
-         ┌───────────────┐
-         │  Colab MCP    │
-         │    Server     │
-         └───────┬───────┘
-                 │
-      ┌──────────┼──────────┐
-      ▼          ▼          ▼
-  Chat Logs   IDE Logs   Terminal
-  ~/.claude/  ~/.cursor/  History
-              
+```mermaid
+graph TB
+    subgraph "AI Coding Assistants"
+        Claude[Claude Desktop]
+        Cursor[Cursor IDE]
+        Codex[Codex CLI]
+        Gemini[Gemini]
+    end
+    
+    subgraph "MCP Layer"
+        MCP[Colab MCP Server<br/>stdio mode]
+    end
+    
+    subgraph "Data Sources"
+        ChatLogs[Chat Logs<br/>~/.claude/]
+        IDELogs[IDE Events<br/>~/.cursor-server/]
+        Terminal[Terminal History<br/>~/.codex/]
+    end
+    
+    Claude -->|MCP Protocol| MCP
+    Cursor -->|MCP Protocol| MCP
+    Codex -->|MCP Protocol| MCP
+    Gemini -->|MCP Protocol| MCP
+    
+    MCP -->|Read| ChatLogs
+    MCP -->|Read| IDELogs
+    MCP -->|Read| Terminal
+    
+    style MCP fill:#f9a825,stroke:#f57f17,stroke-width:3px
+    style Claude fill:#7c4dff,stroke:#651fff
+    style Cursor fill:#448aff,stroke:#2979ff
+    style Codex fill:#00e676,stroke:#00c853
+    style Gemini fill:#ff6e40,stroke:#ff3d00
 ```
 
 ---
