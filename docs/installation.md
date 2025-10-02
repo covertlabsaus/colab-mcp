@@ -22,18 +22,13 @@ This installs:
 
 ## Step 2: Run the Installer
 
-The easiest way:
+Run the interactive installer:
 
 ```bash
-sudo python -m colab_mcp.install
+sudo colab-mcp-install
 ```
 
-Or if you cloned the repo:
-
-```bash
-cd colab-mcp
-sudo ./install.py
-```
+This command was installed with the package in Step 1.
 
 ### Why sudo?
 
@@ -214,7 +209,7 @@ export PATH="$HOME/.local/bin:$PATH"
 Make sure you ran the installer with `sudo`:
 
 ```bash
-sudo python -m colab_mcp.install
+sudo colab-mcp-install
 ```
 
 ### AI tool doesn't see the MCP server
