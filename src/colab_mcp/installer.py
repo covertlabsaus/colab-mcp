@@ -330,7 +330,7 @@ def detect_cursor(home: Path) -> DetectionResult:
 def require_sudo() -> None:
     if hasattr(os, "geteuid"):
         if os.geteuid() != 0:
-            console.print("[bold red]Please rerun with sudo so we can inspect your developer CLI setups:[/] [white]sudo ./install.py[/]")
+            console.print("[bold red]Please rerun with sudo so we can inspect your developer CLI setups:[/] [white]sudo colab-mcp-install[/]")
             sys.exit(1)
     else:
         console.print("[bold red]This installer expects a POSIX environment with sudo available.[/]")
@@ -455,7 +455,7 @@ def show_final_instructions(selected: Sequence[ToolInstaller], ctx: InstallConte
     instructions = Text(
         "Refresh or restart each CLI so it reloads the MCP server.\n"
         "Run their reload command if available, otherwise exit and relaunch.\n"
-        "You can rerun sudo ./install.py anytime to update these entries."
+        "You can rerun sudo colab-mcp-install anytime to update these entries."
     )
     console.print(Panel(instructions, border_style="green", title="Final steps"))
 
