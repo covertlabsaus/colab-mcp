@@ -6,7 +6,7 @@ Real-world scenarios showing how Colab MCP helps your workflow.
 
 ### The Problem
 
-It's Friday evening. You've been working on a new authentication feature with Claude Desktop. You make good progress but don't finish. Monday morning, you open Cursor to continue coding, but you've forgotten some of the design decisions you made.
+It's Friday evening. You've been working on a new authentication feature with Claude Code. You make good progress but don't finish. Monday morning, you open Cursor to continue coding, but you've forgotten some of the design decisions you made.
 
 ### With Colab MCP
 
@@ -28,7 +28,7 @@ Your AI assistant:
 
 ### The Problem
 
-You're debugging a weird error. You tried fixing it in Claude Desktop, then switched to Cursor, then ran some terminal commands with Codex. Now you can't remember what you already tried.
+You're debugging a weird error. You tried fixing it in Claude Code, then switched to Cursor, then ran some terminal commands with Codex. Now you can't remember what you already tried.
 
 ### With Colab MCP
 

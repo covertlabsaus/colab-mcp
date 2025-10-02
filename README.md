@@ -2,14 +2,14 @@
 
 > **Stop losing context when you switch between AI coding tools.**
 
-A Model Context Protocol (MCP) server that lets Claude Desktop, Cursor, Codex, and other AI coding assistants share logs and session history with each other.
+A Model Context Protocol (MCP) server that lets Claude Code, Cursor, Codex, and other AI coding assistants share logs and session history with each other.
 
 [![PyPI version](https://badge.fury.io/py/colab-mcp.svg)](https://badge.fury.io/py/colab-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## The Problem
 
-You're coding with Claude Desktop. You make progress. Then you switch to Cursor to test something. Now you've lost all your context. You explain everything again. Then you jump to Codex. Explain it all over again. 
+You're coding with Claude Code. You make progress. Then you switch to Cursor to test something. Now you've lost all your context. You explain everything again. Then you jump to Codex. Explain it all over again. 
 
 **It's exhausting.**
 
@@ -23,7 +23,7 @@ When you switch tools, your AI already knows what you were working on. No more c
 
 ## ✨ Features
 
-- 🔄 **Share context across tools** - Claude Desktop, Cursor, Codex, Gemini
+- 🔄 **Share context across tools** - Claude Code, Cursor, Codex, Gemini
 - 📜 **Access chat transcripts** from previous sessions
 - 🔍 **Search across all logs** - find that conversation from last week
 - 🎯 **Session summaries** - quick overview of what you were working on
@@ -33,6 +33,8 @@ When you switch tools, your AI already knows what you were working on. No more c
 ---
 
 ## 🏗️ How It Works
+
+Colab MCP sits between your AI coding tools and your local log files, giving all your assistants access to shared context.
 
 ```mermaid
 graph LR
@@ -44,35 +46,34 @@ graph LR
     style C fill:#f5f5f5,stroke:#888,stroke-width:1px
 ```
 
-### Installation Flow
+**The Flow:**
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Installer
-    participant Tools as AI Tools
+1. **You work with Claude Code** - Have a great conversation about architecture
+2. **Logs are saved automatically** - Claude stores the session in `~/.claude/`
+3. **You switch to Cursor** - Time to write some code
+4. **Cursor asks Colab MCP** - "What was discussed earlier?"
+5. **MCP reads the logs** - Fetches your Claude session from disk
+6. **Context restored** - Cursor now knows everything Claude knew
 
-    User->>Installer: Run installer
-    Installer->>Tools: Detect & configure
-    Tools-->>User: Ready to use
-```
+No cloud sync. No APIs. Just local files read by a local server.
 
-### Context Sharing Example
+**Installation is simple:**
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Claude
-    participant MCP
-    participant Cursor
+- Run `sudo ./install.py`
+- Installer detects which AI tools you have (Claude, Cursor, Codex, Gemini)
+- Choose which ones to configure
+- Installer writes MCP config files for each tool
+- Restart your tools - done!
 
-    User->>Claude: Work on feature
-    Note over Claude: Session logged
-    User->>Cursor: Continue work
-    Cursor->>MCP: Get previous context
-    MCP-->>Cursor: Return session
-    Cursor-->>User: Context restored ✓
-```
+**Context sharing in practice:**
+
+You can ask any AI tool things like:
+- "What was I working on yesterday?"
+- "Search my logs for authentication discussions"
+- "Summarize my last Cursor session"
+- "What errors did I hit this morning?"
+
+And they'll actually know, because they can all read the same logs through Colab MCP.
 
 ---
 
@@ -106,7 +107,7 @@ The installer will:
 
 ### 3. Restart Your AI Tools
 
-Restart Claude Desktop, Cursor, Codex, or whichever tools you configured.
+Restart Claude Code, Cursor, Codex, or whichever tools you configured.
 
 That's it! 🎉
 
@@ -142,7 +143,7 @@ Try asking your AI assistant:
 
 If you prefer to configure manually, add this to your MCP config:
 
-### Claude Desktop (`~/.claude/mcp.json`)
+### Claude Code (`~/.claude/mcp.json`)
 
 ```json
 {
@@ -192,7 +193,7 @@ env = { CLAUDE_HOME = "/home/yourusername/.claude", CURSOR_LOGS = "/home/youruse
 ```mermaid
 graph TB
     subgraph AI["AI Tools"]
-        Claude[Claude Desktop]
+        Claude[Claude Code]
         Cursor[Cursor]
         Codex[Codex]
     end

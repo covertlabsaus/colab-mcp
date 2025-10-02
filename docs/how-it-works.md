@@ -9,7 +9,7 @@ Colab MCP is a **FastMCP server** that runs locally on your machine and exposes 
 ```mermaid
 graph TB
     subgraph AI["AI Tools"]
-        Claude[Claude Desktop]
+        Claude[Claude Code]
         Cursor[Cursor]
         Codex[Codex]
         Others[...]
@@ -123,7 +123,7 @@ Colab MCP exposes **5 tools** and dynamically generates **resources** for each s
 
 ## Data Flow Example
 
-Let's say you ask Claude Desktop:
+Let's say you ask Claude Code:
 
 > "What was I working on in my last Cursor session?"
 

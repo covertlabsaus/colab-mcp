@@ -4,7 +4,7 @@
 
 You're a developer in 2025. You've got like 5 different AI coding assistants installed:
 
-- Claude Desktop for architecture discussions
+- Claude Code for architecture discussions
 - Cursor for live coding
 - Codex CLI for quick terminal stuff
 - Maybe Gemini for code review
@@ -18,7 +18,7 @@ They're all amazing tools. But here's the thing that drives you absolutely bonke
 
 Picture this (you've lived this):
 
-1. You spend an hour with Claude Desktop designing a new feature
+1. You spend an hour with Claude Code designing a new feature
 2. You switch to Cursor to actually code it
 3. Cursor has NO IDEA what you just discussed
 4. You either:
@@ -46,13 +46,13 @@ Think of it like this:
 
 ```
 Before:
-Claude Desktop  →  ❌  ←  Cursor  →  ❌  ←  Codex
-  (isolated)              (isolated)      (isolated)
+Claude Code  →  ❌  ←  Cursor  →  ❌  ←  Codex
+ (isolated)          (isolated)      (isolated)
 
 After:
-Claude Desktop  →  Colab MCP  ←  Cursor  →  Colab MCP  ←  Codex
-                   ↑                            ↑
-              Shared logs & history      Shared logs & history
+Claude Code  →  Colab MCP  ←  Cursor  →  Colab MCP  ←  Codex
+                ↑                            ↑
+           Shared logs & history      Shared logs & history
 ```
 
 Now when you switch from Claude to Cursor, you can literally ask:

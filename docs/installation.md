@@ -79,7 +79,7 @@ Example output:
 
 After the installer finishes, you need to restart each AI tool you configured:
 
-### Claude Desktop
+### Claude Code
 
 ```bash
 # macOS
@@ -119,7 +119,7 @@ If you get a response (not an error), it's working! 🎉
 
 If you prefer not to use the installer, you can manually edit your MCP configs.
 
-### Claude Desktop
+### Claude Code
 
 Edit `~/.claude/mcp.json`:
 
