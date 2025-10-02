@@ -32,51 +32,6 @@ When you switch tools, your AI already knows what you were working on. No more c
 
 ---
 
-## 🏗️ How It Works
-
-Colab MCP sits between your AI coding tools and your local log files, giving all your assistants access to shared context.
-
-```mermaid
-graph LR
-    A[AI Tools] --> B[Colab MCP]
-    B --> C[Your Logs]
-    
-    style B fill:#e8f4f8,stroke:#4a90a4,stroke-width:2px
-    style A fill:#f5f5f5,stroke:#888,stroke-width:1px
-    style C fill:#f5f5f5,stroke:#888,stroke-width:1px
-```
-
-**The Flow:**
-
-1. **You work with Claude Code** - Have a great conversation about architecture
-2. **Logs are saved automatically** - Claude stores the session in `~/.claude/`
-3. **You switch to Cursor** - Time to write some code
-4. **Cursor asks Colab MCP** - "What was discussed earlier?"
-5. **MCP reads the logs** - Fetches your Claude session from disk
-6. **Context restored** - Cursor now knows everything Claude knew
-
-No cloud sync. No APIs. Just local files read by a local server.
-
-**Installation is simple:**
-
-- Run `sudo ./install.py`
-- Installer detects which AI tools you have (Claude, Cursor, Codex, Gemini)
-- Choose which ones to configure
-- Installer writes MCP config files for each tool
-- Restart your tools - done!
-
-**Context sharing in practice:**
-
-You can ask any AI tool things like:
-- "What was I working on yesterday?"
-- "Search my logs for authentication discussions"
-- "Summarize my last Cursor session"
-- "What errors did I hit this morning?"
-
-And they'll actually know, because they can all read the same logs through Colab MCP.
-
----
-
 ## 🚀 Quick Start
 
 ### 1. Install
